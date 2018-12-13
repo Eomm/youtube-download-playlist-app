@@ -2,7 +2,7 @@
   "name": "youtube-download-playlist-app",
   "version": "1.0.0",
   "description": "",
-  "main": "app.js",
+  "main": "main.js",
   "scripts": {
     "start": "electron .",
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -16,6 +16,7 @@
     "standard": "^12.0.1"
   },
   "keywords": [
+    "electron",
     "youtube",
     "download",
     "playlist",
@@ -30,5 +31,9 @@
   "bugs": {
     "url": "https://github.com/Eomm/youtube-download-playlist-app/issues"
   },
-  "homepage": "https://github.com/Eomm/youtube-download-playlist-app#readme"
+  "homepage": "https://github.com/Eomm/youtube-download-playlist-app#readme",
+  "dependencies": {
+    "bulma": "^0.7.2",
+    "font-awesome": "^4.7.0"
+  }
 }

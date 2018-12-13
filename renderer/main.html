@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>youtube-download-playlist-app</title>
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="../node_modules/bulma/css/bulma.css">
+  <link rel="stylesheet" href="../node_modules/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="main.css">
+
+  <!-- Electron Javascript -->
+  <!-- <script src="app.js" charset="utf-8"></script> -->
+</head>
+
+<body>
+  <div class="panel">
+
+    <div class="panel-heading">
+      <div class="control is-grouped">
+        <p class="control">
+          <a class="button is-primary open-add-modal">
+            <span class="icon is-small">
+              <i class="fa fa-plus"></i>
+            </span>
+          </a>
+        </p>
+        <p class="control is-expanded has-icon has-icon-right">
+          <input class="input" id="search" type="text">
+          <span class="icon is-small">
+            <i class="fa fa-search"></i>
+          </span>
+        </p>
+      </div>
+    </div>
+
+    <div id="read-list" class="empty">
+      <p id="no-items" class="has-text-centered">No Items</p>
+    </div>
+
+  </div>
+
+</body>
+
+<script>
+  // Main app script
+  require('./app')
+</script>
+
+</html>
