@@ -3,10 +3,12 @@
 const { app, BrowserWindow, ipcMain } = require('electron')
 
 const linkDigest = require('./lib/youtube-link')
+const DownloadManager = require('./lib/download-manager')
 
 require('electron-reload')(__dirname)
 
 let win
+const manager = new DownloadManager()
 
 ipcMain.on('add-link', (e, newUrl) => {
   const videoId = linkDigest.getVideoId(newUrl)
@@ -18,8 +20,20 @@ ipcMain.on('add-link', (e, newUrl) => {
     return
   }
 
-  // TODO: read the url info (video data)
-  e.sender.send('add-link-success', 'foo bar')
+  // priority to playlist
+  let addingPromise
+  if (playlistId) {
+    addingPromise = manager.addPlaylistToQueue(playlistId)
+  } else {
+    addingPromise = manager.addVideoToQueue(videoId)
+  }
+
+  addingPromise
+    .then((newItems) => e.sender.send('add-link-success', newItems))
+    .catch((error) => {
+      console.log(error)
+      e.sender.send('add-link-error', error)
+    })
 })
 
 function createWindow () {

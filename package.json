@@ -9,6 +9,12 @@
     "build-module": "electron-rebuild -v 3.0.10 -w",
     "standard:fix": "standard --fix"
   },
+  "dependencies": {
+    "bulma": "^0.7.2",
+    "font-awesome": "^4.7.0",
+    "jquery": "^3.3.1",
+    "yt-dl-playlist": "^1.0.1"
+  },
   "devDependencies": {
     "electron": "^3.0.11",
     "electron-rebuild": "^1.8.2",
@@ -31,10 +37,5 @@
   "bugs": {
     "url": "https://github.com/Eomm/youtube-download-playlist-app/issues"
   },
-  "homepage": "https://github.com/Eomm/youtube-download-playlist-app#readme",
-  "dependencies": {
-    "bulma": "^0.7.2",
-    "font-awesome": "^4.7.0",
-    "jquery": "^3.3.1"
-  }
+  "homepage": "https://github.com/Eomm/youtube-download-playlist-app#readme"
 }
