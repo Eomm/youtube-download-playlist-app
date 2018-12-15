@@ -1,10 +1,17 @@
 'use strict'
 
-const { app, BrowserWindow } = require('electron')
+const { app, BrowserWindow, ipcMain } = require('electron')
 
-// require('electron-reload')(__dirname)
+require('electron-reload')(__dirname)
 
 let win
+
+ipcMain.on('add-link', (e, newUrl) => {
+  // TODO: validate and read url
+  // TODO: read the url info (video data)
+
+  e.sender.send('add-link-success', 'foo bar')
+})
 
 function createWindow () {
   win = new BrowserWindow({ width: 800, height: 600 })

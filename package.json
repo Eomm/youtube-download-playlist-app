@@ -34,6 +34,7 @@
   "homepage": "https://github.com/Eomm/youtube-download-playlist-app#readme",
   "dependencies": {
     "bulma": "^0.7.2",
-    "font-awesome": "^4.7.0"
+    "font-awesome": "^4.7.0",
+    "jquery": "^3.3.1"
   }
 }

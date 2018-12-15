@@ -3,6 +3,7 @@
 
 <head>
   <title>youtube-download-playlist-app</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <!-- Stylesheets -->
   <link rel="stylesheet" href="../node_modules/bulma/css/bulma.css">
@@ -15,21 +16,16 @@
 
 <body>
   <div class="panel">
-
     <div class="panel-heading">
-      <div class="control is-grouped">
-        <p class="control">
-          <a class="button is-primary open-add-modal">
-            <span class="icon is-small">
-              <i class="fa fa-plus"></i>
-            </span>
-          </a>
+      <div class="field is-grouped">
+        <p class="control is-expanded has-icons-left">
+          <input class="input is-medium" type="text" id="url-input" placeholder="Link to YouTube video or playlist">
+          <span class="icon is-left"> <i class="fa fa-link"></i> </span>
         </p>
-        <p class="control is-expanded has-icon has-icon-right">
-          <input class="input" id="search" type="text">
-          <span class="icon is-small">
-            <i class="fa fa-search"></i>
-          </span>
+        <p class="control">
+          <a class="button is-primary is-medium" id="add-button">
+            <span class="icon is-small"> <i class="fa fa-plus"></i> </span>
+          </a>
         </p>
       </div>
     </div>
