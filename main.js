@@ -2,14 +2,23 @@
 
 const { app, BrowserWindow, ipcMain } = require('electron')
 
+const linkDigest = require('./lib/youtube-link')
+
 require('electron-reload')(__dirname)
 
 let win
 
 ipcMain.on('add-link', (e, newUrl) => {
-  // TODO: validate and read url
-  // TODO: read the url info (video data)
+  const videoId = linkDigest.getVideoId(newUrl)
+  const playlistId = linkDigest.getPlaylistId(newUrl)
+  console.log({ newUrl, videoId, playlistId })
 
+  if (!videoId && !playlistId) {
+    e.sender.send('add-link-error')
+    return
+  }
+
+  // TODO: read the url info (video data)
   e.sender.send('add-link-success', 'foo bar')
 })
 
