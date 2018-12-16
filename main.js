@@ -24,12 +24,13 @@ ipcMain.on('add-link', (e, newUrl) => {
   let addingPromise
   if (playlistId) {
     addingPromise = manager.addPlaylistToQueue(playlistId)
+      .then((playlist) => { e.sender.send('add-link-success', playlist.items) })
   } else {
     addingPromise = manager.addVideoToQueue(videoId)
+      .then((item) => { e.sender.send('add-link-success', item) })
   }
 
   addingPromise
-    .then((newItems) => { e.sender.send('add-link-success', newItems) })
     .catch((error) => { e.sender.send('add-link-error', error.message) })
 })
 
