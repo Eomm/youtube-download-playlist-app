@@ -16,7 +16,7 @@ ipcMain.on('add-link', (e, newUrl) => {
   console.log({ newUrl, videoId, playlistId })
 
   if (!videoId && !playlistId) {
-    e.sender.send('add-link-error')
+    e.sender.send('add-link-error', 'The link is not valid')
     return
   }
 
@@ -29,11 +29,8 @@ ipcMain.on('add-link', (e, newUrl) => {
   }
 
   addingPromise
-    .then((newItems) => e.sender.send('add-link-success', newItems))
-    .catch((error) => {
-      console.log(error)
-      e.sender.send('add-link-error', error)
-    })
+    .then((newItems) => { e.sender.send('add-link-success', newItems) })
+    .catch((error) => { e.sender.send('add-link-error', error.message) })
 })
 
 function createWindow () {

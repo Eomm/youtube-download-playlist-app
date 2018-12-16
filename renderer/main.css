@@ -11,10 +11,14 @@
 }
 
 .panel-heading {
-    position: fixed;
-    width: 100%;
-    margin-top: -52px;
-    z-index: 100;
+  position: fixed;
+  width: 100%;
+  margin-top: -52px;
+  z-index: 100;
+}
+
+#error-message {
+  margin: 0px;
 }
 
 .read-item {
