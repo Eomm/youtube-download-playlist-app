@@ -52,7 +52,6 @@ ipcRenderer.on('download-progress', (e, progress) => {
   videoList.updateItem(progress.id, progress.percent)
 })
 ipcRenderer.on('download-complete', (e, progress) => {
-  console.log(progress)
   videoList.updateItem(progress.id, 100)
 })
 ipcRenderer.on('download-error', (e, progress) => {

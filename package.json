@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "bulma": "^0.7.2",
+    "electron-window-state": "^5.0.3",
     "font-awesome": "^4.7.0",
     "jquery": "^3.3.1",
     "yt-dl-playlist": "^1.0.1"

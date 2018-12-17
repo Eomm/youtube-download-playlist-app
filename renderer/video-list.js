@@ -70,6 +70,7 @@ class VideoList {
 
   updateItem (id, percent) {
     $(`#${id} progress`).val(percent)
+    $(`#download-button-${id}`).addClass('is-loading')
     if (percent >= 100) {
       $(`#download-button-${id}`).removeClass('is-loading')
       $(`#${id} progress`).addClass('is-success')
