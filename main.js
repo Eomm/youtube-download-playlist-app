@@ -34,6 +34,24 @@ ipcMain.on('add-link', (e, newUrl) => {
     .catch((error) => { e.sender.send('add-link-error', error.message) })
 })
 
+ipcMain.on('start-download', (e, videoId) => {
+  manager.downloadVideo(videoId)
+    .catch((error) => { e.sender.send('download-error', error.message) })
+})
+
+manager.on('download-start', (fileInfo) => {
+  win.webContents.send('download-start', fileInfo)
+})
+manager.on('download-progress', (fileInfo) => {
+  win.webContents.send('download-progress', fileInfo)
+})
+manager.on('download-complete', (fileInfo) => {
+  win.webContents.send('download-complete', fileInfo)
+})
+manager.on('download-error', (fileInfoError) => {
+  win.webContents.send('download-error', fileInfoError)
+})
+
 function createWindow () {
   win = new BrowserWindow({ width: 800, height: 600 })
   win.loadFile('renderer/main.html')

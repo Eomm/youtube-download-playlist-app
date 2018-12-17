@@ -1,4 +1,5 @@
 
+const { ipcRenderer } = require('electron')
 const $ = require('jquery')
 
 class VideoList {
@@ -23,26 +24,28 @@ class VideoList {
   renderItem (item) {
     $('#no-items').hide()
 
-    // duration  :  "0:04"
-    // id  :  "6zXDo4dL7SU"
-    // thumbnail  :  "https://i.ytimg.com/vi/6zXDo4dL7SU/hqdefault.jpg"
-    // title  :  "Ba Dum Tss!"
-    // url  :  "https://www.youtube.com/watch?v=6zXDo4dL7SU&index=2&t=0s&list=PLAv2aQ9JgGbVcUtDpuiTB9WgaMljCUpa_"
-    // url_simple  :  "https://www.youtube.com/watch?v=6zXDo4dL7SU"
-
     // New item html
+    const downloadBtnId = `download-button-${item.id}`
+    const deleteBtnId = `delete-button-${item.id}`
     let itemHTML = `
-      <div class="card-content">
+      <div class="card-content" id="${item.id}">
         <div class="media">
           <div class="media-left">
-            <figure class="image is-48x48">
-              <img src="${item.thumbnail}" alt="Preview image">
-            </figure>
+            
+            <p class="control">
+              <a class="button is-info is-medium" id="${downloadBtnId}">
+                <span class="icon is-small"> <i class="fa fa-download"></i> </span>
+              </a>
+              <a class="button is-danger is-medium" id="${deleteBtnId}">
+                <span class="icon is-small"> <i class="fa fa-trash"></i> </span>
+              </a>
+            </p>
+
           </div>
           <div class="media-content">
             <p class="title is-4">${item.title} <small class="duration">${item.duration}</small></p>
             <p class="subtitle is-6">
-              <progress class="progress is-info is-small" value="0" max="100"></progress>
+              <progress class="progress is-small ${item.percent === 100 ? 'is-success' : 'is-info'}" value="${item.percent || 0}" max="100"></progress>
             </p>
           </div>
         </div>
@@ -51,10 +54,39 @@ class VideoList {
     $('#video-list').append(itemHTML)
 
     // Attach select event handler
-    $('.read-item')
-      .off('click, dblclick')
-      .on('click', this.selectItem)
-      .on('dblclick', window.openItem)
+    $(`#${downloadBtnId}`)
+      .off('click')
+      .on('click', () => this.downloadItem(item.id))
+    $(`#${deleteBtnId}`)
+      .off('click')
+      .on('click', () => this.deleteItem(item.id))
+  }
+
+  downloadItem (id) {
+    $(`#download-button-${id}`).addClass('is-loading')
+    $(`#${id} progress`).removeAttr('value')
+    ipcRenderer.send('start-download', id)
+  }
+
+  updateItem (id, percent) {
+    $(`#${id} progress`).val(percent)
+    if (percent >= 100) {
+      $(`#download-button-${id}`).removeClass('is-loading')
+      $(`#${id} progress`).addClass('is-success')
+      const item = this.items.find(_ => _.id === id)
+      item.percent = 100
+      this.saveItems()
+    } else if (percent < 0) {
+      $(`#${id} progress`)
+        .addClass('is-danger')
+        .val(100)
+    }
+  }
+
+  deleteItem (id) {
+    $(`#${id}`).remove()
+    this.items = this.items.filter(_ => _.id !== id)
+    this.saveItems()
   }
 
   openItem (item) {
