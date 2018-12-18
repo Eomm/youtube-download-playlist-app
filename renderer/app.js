@@ -48,6 +48,7 @@ function saveSavePath () {
   let done = false
   if (value) {
     done = ipcRenderer.sendSync('set-config', { outputPath: value })
+    localStorage.setItem('download-dir', value)
   }
   if (!done) {
     urlError(null, 'The selected folder is not valid')
@@ -94,3 +95,9 @@ $('#open-folder-button').click(() => {
 })
 
 videoList.load()
+
+const savedDir = localStorage.getItem('download-dir')
+if (savedDir) {
+  $('#output-path').val(savedDir)
+  saveSavePath()
+}
