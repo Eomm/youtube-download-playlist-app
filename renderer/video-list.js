@@ -24,6 +24,8 @@ class VideoList {
     $('#no-items').hide()
 
     // New item html
+    const isPlaylist = item.playlistId !== undefined
+    const playlistId = isPlaylist ? `playlist-button-${item.playlistId}` : ''
     const downloadBtnId = `download-button-${item.id}`
     const deleteBtnId = `delete-button-${item.id}`
     let itemHTML = `
@@ -32,7 +34,7 @@ class VideoList {
           <div class="media-left">
             
             <p class="control">
-              <a class="button is-info is-medium" id="${downloadBtnId}">
+              <a class="button is-info is-medium ${playlistId}" id="${downloadBtnId}">
                 <span class="icon is-small"> <i class="fa fa-download"></i> </span>
               </a>
               <a class="button is-danger is-medium" id="${deleteBtnId}">
@@ -53,9 +55,15 @@ class VideoList {
     $('#video-list').append(itemHTML)
 
     // Attach select event handler
-    $(`#${downloadBtnId}`)
-      .off('click')
-      .on('click', () => this.downloadItem(item.id))
+    if (isPlaylist) {
+      $(`#${downloadBtnId}`)
+        .off('click')
+        .on('click', () => this.downloadItems(item.playlistId))
+    } else {
+      $(`#${downloadBtnId}`)
+        .off('click')
+        .on('click', () => this.downloadItem(item.id))
+    }
     $(`#${deleteBtnId}`)
       .off('click')
       .on('click', () => this.deleteItem(item.id))
@@ -65,6 +73,12 @@ class VideoList {
     $(`#download-button-${id}`).addClass('is-loading')
     $(`#${id} progress`).removeAttr('value')
     ipcRenderer.send('start-download', id)
+  }
+
+  downloadItems (id) {
+    $(`.playlist-button-${id}`).addClass('is-loading')
+    $(`#${id} progress`).removeAttr('value')
+    ipcRenderer.send('start-download-playlist', id)
   }
 
   updateItem (id, percent) {

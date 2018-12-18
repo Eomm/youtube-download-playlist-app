@@ -26,7 +26,10 @@ ipcMain.on('add-link', (e, newUrl) => {
   let addingPromise
   if (playlistId) {
     addingPromise = manager.addPlaylistToQueue(playlistId)
-      .then((playlist) => { e.sender.send('add-link-success', playlist.items) })
+      .then((playlist) => {
+        playlist.items.forEach(_ => { _.playlistId = playlistId })
+        e.sender.send('add-link-success', playlist.items)
+      })
   } else {
     addingPromise = manager.addVideoToQueue(videoId)
       .then((item) => { e.sender.send('add-link-success', item) })
@@ -38,6 +41,10 @@ ipcMain.on('add-link', (e, newUrl) => {
 
 ipcMain.on('start-download', (e, videoId) => {
   manager.downloadVideo(videoId)
+    .catch((error) => { e.sender.send('download-error', error.message) })
+})
+ipcMain.on('start-download-playlist', (e, playlist) => {
+  manager.downloadPlaylist(playlist)
     .catch((error) => { e.sender.send('download-error', error.message) })
 })
 
