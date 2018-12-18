@@ -9,7 +9,8 @@ const DownloadManager = require('./lib/download-manager')
 require('electron-reload')(__dirname)
 
 let win
-const manager = new DownloadManager()
+const defaultPath = app.getPath('music')
+const manager = new DownloadManager(defaultPath)
 
 ipcMain.on('add-link', (e, newUrl) => {
   const videoId = linkDigest.getVideoId(newUrl)
@@ -38,6 +39,18 @@ ipcMain.on('add-link', (e, newUrl) => {
 ipcMain.on('start-download', (e, videoId) => {
   manager.downloadVideo(videoId)
     .catch((error) => { e.sender.send('download-error', error.message) })
+})
+
+ipcMain.on('get-config', (e) => {
+  const settings = {
+    outputPath: manager.downloadPath
+  }
+  e.returnValue = settings
+})
+
+ipcMain.on('set-config', (e, config) => {
+  manager.downloadPath = config.outputPath
+  e.returnValue = true
 })
 
 manager.on('download-start', (fileInfo) => {
@@ -73,7 +86,7 @@ function createWindow () {
 
   win.loadFile('renderer/main.html')
 
-  // win.webContents.openDevTools()
+  win.webContents.openDevTools()
 
   win.on('closed', () => { win = null })
 }

@@ -1,7 +1,9 @@
+'use strict'
 
-const $ = require('jquery')
 const { ipcRenderer } = require('electron')
+const { dialog } = require('electron').remote
 
+const menu = require('./menu')
 const VideoList = require('./video-list')
 
 const videoList = new VideoList()
@@ -41,6 +43,18 @@ function appendItems (e, items) {
   $('#add-button').removeClass('is-loading')
 }
 
+function saveSavePath () {
+  const value = $('#output-path').val()
+  let done = false
+  if (value) {
+    done = ipcRenderer.sendSync('set-config', { outputPath: value })
+  }
+  if (!done) {
+    urlError(null, 'The selected folder is not valid')
+  }
+  $('.close-setting-modal').click()
+}
+
 // Bindings IPC
 ipcRenderer.on('add-link-success', appendItems)
 ipcRenderer.on('add-link-error', urlError)
@@ -62,5 +76,21 @@ ipcRenderer.on('download-error', (e, progress) => {
 // Bindings
 $('#add-button').click(handleAddUrl)
 $('#url-input').keyup((e) => { if (e.key === 'Enter') { $('#add-button').click() } })
+
+window.openSetting = function () {
+  const settings = ipcRenderer.sendSync('get-config')
+  $('#output-path').val(settings.outputPath)
+  $('#setting-modal').addClass('is-active')
+}
+$('.close-setting-modal').click(() => { $('#setting-modal').removeClass('is-active') })
+$('#setting-button').click(saveSavePath)
+$('#open-folder-button').click(() => {
+  const path = dialog.showOpenDialog({
+    properties: ['openDirectory']
+  })
+  if (path) {
+    $('#output-path').val(path)
+  }
+})
 
 videoList.load()

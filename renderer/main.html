@@ -34,13 +34,47 @@
     <div id="video-list" class="empty">
       <p id="no-items" class="has-text-centered">No Items</p>
     </div>
+  </div>
 
+  <div id="setting-modal" class="modal">
+    <div class="modal-background"></div>
+    <div class="modal-content">
+
+
+
+      <div class="field is-grouped">
+        <p class="control is-expanded has-icons-left">
+          <input class="input is-medium" type="text" disabled placeholder="Select a folder" id="output-path">
+          <span class="icon is-left"> <i class="fa fa-folder"></i> </span>
+        </p>
+        <p class="control">
+          <a class="button is-primary is-medium" id="open-folder-button">
+            <span class="icon is-small"> <i class="fa fa-folder-open"></i> </span>
+          </a>
+        </p>
+      </div>
+
+      <div class="field is-grouped">
+        <p class="control">
+          <a class="button is-primary" id="setting-button">
+            <span class="icon is-small">
+              <i class="fa fa-save"></i>
+            </span>
+            <span><strong>Save</strong></span>
+          </a>
+        </p>
+        <p class="control">
+          <a class="button close-setting-modal">Cancel</a>
+        </p>
+      </div>
+    </div>
   </div>
 
 </body>
 
 <script>
   // Main app script
+  const $ = require('jquery')
   require('./app')
 </script>
 
