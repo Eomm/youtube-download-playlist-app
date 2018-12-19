@@ -6,7 +6,7 @@ const windowStateKeeper = require('electron-window-state')
 const linkDigest = require('./lib/youtube-link')
 const DownloadManager = require('./lib/download-manager')
 
-require('electron-reload')(__dirname)
+// require('electron-reload')(__dirname)
 
 let win
 const defaultPath = app.getPath('music')
@@ -41,11 +41,10 @@ ipcMain.on('add-link', (e, newUrl) => {
 
 ipcMain.on('start-download', (e, videoId) => {
   manager.downloadVideo(videoId)
-    .catch((error) => { e.sender.send('download-error', error.message) })
+    .catch((error) => { e.sender.send('download-error', error) })
 })
 ipcMain.on('start-download-playlist', (e, playlist) => {
   manager.downloadPlaylist(playlist)
-    .catch((error) => { e.sender.send('download-error', error.message) })
 })
 
 ipcMain.on('get-config', (e) => {
@@ -93,7 +92,7 @@ function createWindow () {
 
   win.loadFile('renderer/main.html')
 
-  win.webContents.openDevTools()
+  // win.webContents.openDevTools()
 
   win.on('closed', () => { win = null })
 }

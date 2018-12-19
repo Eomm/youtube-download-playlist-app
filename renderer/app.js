@@ -77,7 +77,7 @@ ipcRenderer.on('download-error', (e, progress) => {
 // Bindings
 $('#add-button').click(handleAddUrl)
 $('#url-input').keyup((e) => { if (e.key === 'Enter') { $('#add-button').click() } })
-
+window.addEventListener('offline', () => urlError(null, 'You are offline, connect to internet'))
 window.openSetting = function () {
   const settings = ipcRenderer.sendSync('get-config')
   $('#output-path').val(settings.outputPath)
@@ -94,6 +94,7 @@ $('#open-folder-button').click(() => {
   }
 })
 
+// Startup
 videoList.load()
 
 const savedDir = localStorage.getItem('download-dir')

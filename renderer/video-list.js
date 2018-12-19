@@ -98,6 +98,7 @@ class VideoList {
       item.percent = 100
       this.saveItems()
     } else if (percent < 0) {
+      $(`#download-button-${id}`).removeClass('is-loading')
       $(`#${id} progress`)
         .addClass('is-danger')
         .val(100)
@@ -107,6 +108,7 @@ class VideoList {
   deleteItem (id) {
     $(`#${id}`).remove()
     this.items = this.items.filter(_ => _.id !== id)
+    this.idSet.delete(id)
     this.saveItems()
   }
 
