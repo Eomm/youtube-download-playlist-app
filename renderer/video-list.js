@@ -8,16 +8,23 @@ class VideoList {
 
   load () {
     this.items = JSON.parse(localStorage.getItem('video-list')) || []
-    this.items.forEach((i) => this.renderItem(i))
+    this.idSet = new Set()
+    this.items.forEach((i) => {
+      this.idSet.add(i.id)
+      this.renderItem(i)
+    })
   }
   saveItems () {
     localStorage.setItem('video-list', JSON.stringify(this.items))
   }
 
   addItem (item) {
-    this.items.push(item)
-    this.saveItems()
-    this.renderItem(item)
+    if (!this.idSet.has(item.id)) {
+      this.idSet.add(item.id)
+      this.items.push(item)
+      this.saveItems()
+      this.renderItem(item)
+    }
   }
 
   renderItem (item) {
