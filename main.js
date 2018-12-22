@@ -5,7 +5,7 @@ const windowStateKeeper = require('electron-window-state')
 
 const linkDigest = require('./lib/youtube-link')
 const DownloadManager = require('./lib/download-manager')
-
+const needUpdate = require('./lib/update-alert')
 // require('electron-reload')(__dirname)
 
 let win
@@ -97,7 +97,12 @@ function createWindow () {
   win.on('closed', () => { win = null })
 }
 
-app.on('ready', createWindow)
+app.on('ready', () => {
+  createWindow()
+  needUpdate((newRelease) => {
+    win.webContents.send('new-release', newRelease)
+  })
+})
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {

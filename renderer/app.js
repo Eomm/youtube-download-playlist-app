@@ -1,6 +1,6 @@
 'use strict'
 
-const { ipcRenderer } = require('electron')
+const { ipcRenderer, shell } = require('electron')
 const { dialog } = require('electron').remote
 
 const menu = require('./menu')
@@ -35,6 +35,12 @@ function urlError (e, error) {
       .text(`Error: ${error}`)
       .removeClass('is-hidden')
   }
+}
+
+function releaseMessage (message, url) {
+  $('#info-message-text').text(message)
+  $('#new-release-button').off('click').click(() => shell.openExternal(url))
+  $('#info-message').removeClass('is-hidden')
 }
 
 function appendItems (e, items) {
@@ -72,6 +78,10 @@ ipcRenderer.on('download-complete', (e, progress) => {
 ipcRenderer.on('download-error', (e, progress) => {
   urlError(null, progress.result)
   videoList.updateItem(progress.id, -1)
+})
+
+ipcRenderer.on('new-release', (e, release) => {
+  releaseMessage(`NEW RELEASE! Download the new ${release.tag_name} version!!`, release.html_url)
 })
 
 // Bindings
