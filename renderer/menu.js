@@ -9,7 +9,7 @@ const template = [
     label: 'Settings',
     submenu: [
       {
-        label: 'Add New',
+        label: 'Configure Path',
         accelerator: 'CmdOrCtrl+O',
         click () { window.openSetting() }
       },

@@ -49,13 +49,15 @@ ipcMain.on('start-download-playlist', (e, playlist) => {
 
 ipcMain.on('get-config', (e) => {
   const settings = {
-    outputPath: manager.downloadPath
+    outputPath: manager.downloadPath,
+    ffmpegPath: manager.ffmpegPath
   }
   e.returnValue = settings
 })
 
 ipcMain.on('set-config', (e, config) => {
   manager.downloadPath = config.outputPath
+  manager.ffmpegPath = config.ffmpegPath
   e.returnValue = true
 })
 

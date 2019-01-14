@@ -8,6 +8,35 @@ const VideoList = require('./video-list')
 
 const videoList = new VideoList()
 
+function loadSetting (storageId, htmlId) {
+  const savedDir = localStorage.getItem(storageId)
+  if (savedDir) {
+    $(`#${htmlId}`).val(savedDir)
+    return true
+  }
+  return false
+}
+
+function selectFolder (id) {
+  return () => {
+    const path = dialog.showOpenDialog({
+      properties: ['openDirectory']
+    })
+    if (path) {
+      $(`#${id}`).val(path)
+    }
+  }
+}
+
+function selectFile (id) {
+  return () => {
+    const path = dialog.showOpenDialog()
+    if (path) {
+      $(`#${id}`).val(path)
+    }
+  }
+}
+
 function handleAddUrl () {
   let newUrl = $('#url-input').val()
   if (!newUrl) {
@@ -50,11 +79,13 @@ function appendItems (e, items) {
 }
 
 function saveSavePath () {
-  const value = $('#output-path').val()
+  const outputPath = $('#output-path').val()
+  const ffmpegPath = $('#output-ffmpeg-path').val()
   let done = false
-  if (value) {
-    done = ipcRenderer.sendSync('set-config', { outputPath: value })
-    localStorage.setItem('download-dir', value)
+  if (outputPath && ffmpegPath) {
+    done = ipcRenderer.sendSync('set-config', { outputPath, ffmpegPath })
+    localStorage.setItem('download-dir', outputPath)
+    localStorage.setItem('ffmpeg-dir', ffmpegPath)
   }
   if (!done) {
     urlError(null, 'The selected folder is not valid')
@@ -91,24 +122,18 @@ window.addEventListener('offline', () => urlError(null, 'You are offline, connec
 window.openSetting = function () {
   const settings = ipcRenderer.sendSync('get-config')
   $('#output-path').val(settings.outputPath)
+  $('#output-ffmpeg-path').val(settings.ffmpegPath)
   $('#setting-modal').addClass('is-active')
 }
 $('.close-setting-modal').click(() => { $('#setting-modal').removeClass('is-active') })
 $('#setting-button').click(saveSavePath)
-$('#open-folder-button').click(() => {
-  const path = dialog.showOpenDialog({
-    properties: ['openDirectory']
-  })
-  if (path) {
-    $('#output-path').val(path)
-  }
-})
+$('#open-folder-button').click(selectFolder('output-path'))
+$('#open-ffmpeg-button').click(selectFile('output-ffmpeg-path'))
 
 // Startup
 videoList.load()
 
-const savedDir = localStorage.getItem('download-dir')
-if (savedDir) {
-  $('#output-path').val(savedDir)
+if (loadSetting('download-dir', 'output-path') &&
+loadSetting('ffmpeg-dir', 'output-ffmpeg-path')) {
   saveSavePath()
 }
